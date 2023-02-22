@@ -1,0 +1,35 @@
+OSINT Framework:
+Canivete suíço do pentester
+Open Source Intelligence
+osintframework.com  
+
+Quais as fontes escolhidas?
+Qual a confiabilidade das fontes?
+Quais palavras chaves utilizar?
+Quais as melhores ferramentas?
+
+----------------------------------------------------------------
+
+Google Hacking 
+Shodan, o Google dos Hackers
+Maltego -> Maltego CE (Free)	 
+Foca (Fingerprinting & Organisation with Collected Archives)
+github.com/EleventPaths/FOCA/releases
+
+----------------------------------------------------------------
+
+Engenharia Social
+* Phishing 
+
+Projeto: criando um phishing 
+Ferramenta: setoolkit para criar uma página falsa do Facebook que captura senhas
+*O Arquivo /set do setoolkit está em /usr/share/nmap/scripts
+
+setoolkit
+1) social-engineering attacks 
+
+2) Website Attack Vectors
+
+3) Credential Harvester Attack Method
+
+2) Site Cloner 

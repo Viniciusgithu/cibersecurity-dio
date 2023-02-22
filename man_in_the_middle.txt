@@ -1,0 +1,26 @@
+Man in the middle:
+Ferramentas: Wireshark, Ettercap, Cain e Abel, Bettercap, MV
+
+Wireshark é um analisador de protocolo de rede ou um aplicativo que captura pacotes
+de uma conexão de rede. Pacote é o nome dado a uma unidade discreta de dados em uma rede
+Ethernet típica. 
+
+Wireshark é um sniffer de rede, ou seja, é uma aplicação que lê pacotes que atravessam a rede
+dentro da camada TCP/IP (Transmission Control Protocol/Internet Protocol)
+
+Filter in wireshark: 
+http.request.method == "POST"
+Show Packet in New Window
+
+ip.addr == ip
+
+
+
+Manipulação de redes:
+Ferramenta: Ettercap
+
+1) sudo su
+2) echo 1 > /proc/sys/net/ipv4/ip_forward
+
+ATTACK: ARP Poisoning 
+Sniff remote connections 
